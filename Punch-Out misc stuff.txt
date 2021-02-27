@@ -1,0 +1,9 @@
+Misc. hardware notes:
+
+CPUs are a Z80 for the main game logic + graphical stuff, and a 2A03 for audio.
+System uses a dual-monitor configuration, both screens are output at a display resolution of 256 x 224.
+Hardware has support for sprite scaling, but can only scale one sprite per screen.
+Audio subsystem consists of a 2A03 (like the NES), and a Sanyo VLM5030.
+The 2A03 is well-documented on sites like the NESDev wiki, the audio half of it is documented here: https://wiki.nesdev.com/w/index.php/APU
+The VLM5030 is a speech synthesizer, which in terms of Nintendo hardware is unique to the Punch-Out/Arm Wrestling boards.
+You can read about the VLM5030 here: https://github.com/mamedev/mame/blob/master/src/devices/sound/vlm5030.cpp
