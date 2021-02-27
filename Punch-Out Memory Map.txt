@@ -1,0 +1,82 @@
+Memory map information taken from MAME's punchout.cpp driver. All credit for this information goes to the MAME team.
+
+main CPU:
+0000-bfff ROM
+c000-c3ff NVRAM
+d000-d7ff RAM
+d800-dfff Video RAM (info screen)
+e000-e7ff Video RAM (opponent)
+e800-efff Video RAM (player)
+f000-f03f Background row scroll (low/high couples)
+f000-ffff Video RAM (background)
+
+memory mapped ports:
+
+write:
+dfe0-dfef ??
+dff0      big sprite #1 zoom low 8 bits
+dff1      big sprite #1 zoom high 4 bits
+dff2      big sprite #1 x pos low 8 bits
+dff3      big sprite #1 x pos high 4 bits
+dff4      big sprite #1 y pos low 8 bits
+dff5      big sprite #1 y pos high bit
+dff6      big sprite #1 x flip (bit 0)
+dff7      big sprite #1 bit 0: show on top monitor; bit 1: show on bottom monitor
+dff8      big sprite #2 x pos low 8 bits
+dff9      big sprite #2 x pos high bit
+dffa      big sprite #2 y pos low 8 bits
+dffb      big sprite #2 y pos high bit
+dffc      big sprite #2 x flip (bit 0)
+dffd      palette bank (bit 0 = bottom monitor bit 1 = top monitor)
+
+I/O
+
+read:
+00        IN0
+01        IN1
+02        DSW0
+03        DSW1 (bit 4: VLM5030 busy signal)
+
+write:
+00        to 2A03 #1 IN0 (unpopulated)
+01        to 2A03 #1 IN1 (unpopulated)
+02        to 2A03 #2 IN0
+03        to 2A03 #2 IN1
+04        to VLM5030
+08        NMI enable + watchdog reset
+09        watchdog reset
+0a        ? latched into Z80 BUS RQ
+0b        to 2A03 #1 and #2 RESET
+0c        to VLM5030 RESET
+0d        to VLM5030 START
+0e        to VLM5030 VCU
+0f        enable NVRAM ?
+
+sound CPU:
+the sound CPU is a 2A03, which is a modified 6502 with built-in input ports
+and two (analog?) outputs. The input ports are memory mapped at 4016-4017;
+the outputs are more complicated. The only thing I have found is that 4011
+goes straight into a DAC and produces the crowd sounds, but several addresses
+in the range 4000-4017 are written to. There are probably three tone generators.
+
+0000-07ff RAM
+e000-ffff ROM
+
+read:
+4016      IN0
+4017      IN1
+
+write:
+4000      ? is usually ORed with 90 or 50
+4001      ? usually 7f, could be associated with 4000
+4002-4003 ? tone #1 freq? (bit 3 of 4003 is always 1, bits 4-7 always 0)
+4004      ? is usually ORed with 90 or 50
+4005      ? usually 7f, could be associated with 4004
+4006-4007 ? tone #2 freq? (bit 3 of 4007 is always 1, bits 4-7 always 0)
+4008      ? at one point the max value is cut at 38
+400a-400b ? tone #3 freq? (bit 3 of 400b is always 1, bits 4-7 always 0)
+400c      ?
+400e-400f ?
+4011      DAC crowd noise
+4015      ?? 00 or 0f
+4017      ?? always c0
